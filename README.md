@@ -11,9 +11,6 @@ Architecture:
 4. MongoDB sink materializes results
 5. Cloud Run API exposes risk classification
 
-Aligned with:
-- https://github.com/confluentinc/gcp-flink-cflt-genai-quickstart
-- https://github.com/confluentinc/mongodb-cflt-gcp-genai-quickstart
 
 ---
 
