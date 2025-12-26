@@ -1,0 +1,11 @@
+{
+  "address": "0xTEST",
+  "chain": "ethereum",
+  "features": {
+    "burstiness": 0.91,
+    "out_in_ratio": 0.92
+  },
+  "timestamp": "2025-09-01T12:00:00Z"
+}
+
+
