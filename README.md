@@ -1,93 +1,176 @@
-# OnChainSentinel – Real-Time Blockchain Fraud Behavior Detection
+# OnChainSentinel (Minimal PoC with Confluent Managed AI · Gemma 2 2b-it)
 
-OnChainSentinel continuously analyzes blockchain behavioral features in real time, classifies address risk with GenAI,
-and exposes results through a public API.
+This repository contains a minimal Proof of Concept demonstrating:
+- Real-time behavior ingestion (Kafka)
+- Risk output to a downstream Kafka topic
+- Optional sink to BigQuery on Google Cloud
 
-Architecture:
+Architecture: Kafka → Flink (Gemini/Vertex AI) → Kafka → (optional BigQuery)
 
-1. Produce behavior to Kafka topic `behavior.raw`
-2. Confluent Cloud Flink enriches data using GenAI (`Vertex AI`)
-3. Result is streamed to `behavior.scored`
-4. MongoDB sink materializes results
-5. Cloud Run API exposes risk classification
+This aligns with:
+- Confluent AI docs
+- Flink on Confluent Cloud Quickstart
+- Confluent Cloud Connectors
+- Challenge requirements for continuous AI inference on data-in-motion
+
+---
+
+## SETUP
+
+### Login to Confluent & select env/cluster
+
+```
+confluent login
+```
+
+
+### Environment
+```
+confluent environment create onchainsentinel
+confluent environment list # Optional to list environments
+confluent environment use <env-id>
+confluent environment delete <env-id>
+```
+
+
+
+### Cluster
+
+```
+confluent kafka cluster delete lkc-orxjxx
+confluent kafka cluster list # Optional to list the clusters
+confluent kafka cluster use <lkc-id>
+```
+
+
+### Create topics
+```
+kafka/create_topics.sh
+```
+
+### Create topics
+```
+kafka/create_schemas.sh
+```
+
+### Create Flink compute pool 
+```
+confluent flink compute-pool create onchainsentinel-flink --cloud gcp --region us-east1 --max-cfu 5
+```
+
+```
+confluent flink compute-pool list # Optional to list compute pools
+confluent flink compute-pool use <pool-id>
+```
+
+```
+confluent flink compute-pool delete <pool-id>
+```
+
+### Register shema
+```
+confluent schema-registry schema create   --subject onchainsentinel.behavior.raw-value   --type AVRO   --schema kafka/avro_behavior_raw.avsc
+
+confluent schema-registry schema create   --subject onchainsentinel.risk.scores-value   --type AVRO   --schema kafka/avro_risk_scores.avsc
+
+confluent schema-registry schema list # To list
+confluent schema-registry schema describe --subject onchainsentinel.behavior.raw-value --version latest # To describe
+```
+
+
+
+```
+confluent schema-registry schema delete --subject onchainsentinel.behavior.raw-value  --version latest
+confluent schema-registry schema delete --subject onchainsentinel.behavior.raw-value  --version latest
+```
+
+
+### Start Flink SQL shell
+
+```
+confluent flink shell --compute-pool <pool-id> --database <lkc-id>
+```
+
+Note: Ctrl + Q to exit shell
+
+
+# Model creation
+Note: Unfortunatly we could not use managed models (available only in AWS specific region) and opt for a remote AI model
+
+## Remote AI model Google AI
+
+Generate an API Key from https://aistudio.google.com/app/apikey.
+
+The endpoint is https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent.
+
+Gemini models are also supported through the Vertex AI provider, which you may prefer due to integrated Google Cloud billing.
+
+1. Create Connection
+
+```
+CREATE CONNECTION googleai_connection
+WITH (
+  'type' = 'googleai',
+  'endpoint' = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+  'api-key' = '<your-gcp-api-key>'
+);
+```
+
+```
+SHOW CONNECTIONS;
+```
+
+```
+DROP CONNECTION googleai_connection;
+```
+
+
+2. CREATE MODEL
+```
+CREATE MODEL model_tx_analyzer
+INPUT (`text` VARCHAR(2147483647))
+OUTPUT (`output` VARCHAR(2147483647))
+WITH (
+  'googleai.connection' = 'googleai_connection',
+  'googleai.system_prompt' = 'You are a blockchain AI risk classifier.\\nClassify the following transaction as HIGH, MEDIUM, or LOW risk',
+  'provider' = 'googleai',
+  'task' = 'text_generation'
+);
+```
+
+```
+SHOW MODELS;
+```
+
+
+```
+DROP MODEL model_tx_analyzer
+```
+
+## Remote AI model Vertex AI
+
+
+
+### Apply SQL in this exact order
+
+
+
+:> flink/01_behavior_raw.sql
+:> flink/02_behavior_prompt.sql
+:> flink/03_behavior_risk_scores.sql
+:> flink/04_model_create_managed_gemma.sql
+:> flink/05_ai_enrichment.sql
 
 
 ---
 
-## RUNNING END-TO-END
+## TEST ROUND
 
-### 0 — Dependencies
+### Run producer once
+python kafka/producer.py
 
-```
-gcloud components install beta
-pip install google-cloud-aiplatform vertexai flask pymongo confluent-kafka
-```
+### Check enriched risk stream
+confluent kafka topic consume onchainsentinel.risk.scores --from-beginning
 
-### 1 — Configure Google Cloud
-
-```
-gcloud auth login
-gcloud config set project YOUR_PROJECT
-gcloud services enable aiplatform.googleapis.com run.googleapis.com
-```
-
-
-### 2 — Confluent Cloud CLI setup
-
-```
-confluent login
-confluent environment use <ENV_ID>
-confluent kafka cluster use <CLUSTER_ID>
-
-```
-
-### 3 — Create Topics
-```
-bash kafka/topics.sh
-```
-
-
-### 4 — Deploy Flink SQL
-Upload files inside `flink/` into Confluent → Flink SQL Workspace:
-
-- behavior_raw.sql
-- behavior_scored.sql
-- genai_stream_job.sql
-
-### 5 — Deploy GenAI enrichment service to Cloud Run
-
-```
-cd genai
-gcloud run deploy genai-service --source . --region us-central1 --allow-unauthenticated
-
-```
-
-Take note of the deployed URL, use it inside `genai_stream_job.sql`.
-
-### 6 — Setup MongoDB sink
-
-```
-confluent connect create --config sink/mongo_sink.json
-
-```
-
-### 7 — Deploy API to Cloud Run
-
-```
-cd api
-gcloud run deploy onchainsentinel-api --source . --region us-central1 --allow-unauthenticated
-```
-
-### 8 — Run a test round
-
-
-```
-confluent kafka topic produce behavior.raw < kafka/sample-input.json
-curl https://onchainsentinel-api-xxxx.a.run.app/address/0xTEST
-
-```
-Output
-→ {"address":"0xTEST","risk":"DANGER"}
-
-
-
+Expected:
+{"address":"0xTEST"...,"response_text":"SUSPICIOUS: abnormal burstiness"}

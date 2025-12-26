@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "blockchainNodeTx",
+  "namespace": "onchainsentinel",
+  "fields": [
+    {"name": "chain", "type": "string"},
+    {"name": "txId", "type": "string"},
+    {"name": "address", "type": "string"},
+    {"name": "to_address", "type": "string"},
+    {"name": "value", "type": "string"},
+    {"name": "ts", "type": "long"}
+  ]
+}

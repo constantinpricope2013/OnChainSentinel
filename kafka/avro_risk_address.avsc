@@ -1,12 +1,13 @@
 {
   "type": "record",
-  "name": "RiskScores",
+  "name": "AddressRiskScores",
   "namespace": "onchainsentinel",
   "fields": [
     {"name": "address", "type": "string"},
     {"name": "chain", "type": "string"},
-    {"name": "ts", "type": "long"},
     {"name": "model_name", "type": "string"},
-    {"name": "response_text", "type": "string"}
+    {"name": "origin_tx_id", "type": "string"},
+    {"name": "risk", "type": "string"},
+    {"name": "reason", "type": "string"}
   ]
 }
