@@ -1,0 +1,11 @@
+{
+  "name": "onchainsentinel-bq-sink",
+  "connector.class": "BigQueryStorageSink",
+  "topics": "onchainsentinel.risk.scores",
+  "input.data.format": "JSON",
+  "project.id": "your-gcp-project-id",
+  "dataset": "onchainsentinel_demo",
+  "table.name.format": "risk_scores",
+  "auto.create.tables": "true",
+  "gcp.credentials.config": "<service-account-json>"
+}
