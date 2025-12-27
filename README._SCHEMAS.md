@@ -12,25 +12,27 @@ flowchart LR
     subgraph Users
     A[Web3 Wallets]
     B[dApps]
-    C[CEX<br/>(Centralized Exchanges)]
+    C[CEX]
     end
 
-    D[Blockchain<br/>Explorers]
+    D[Blockchain Explorers]
 
     subgraph Blockchain
-    N1[(ETH Node)]
-    N2[(TRON Node)]
-    N3[(Polygon Node)]
+    N1[ETH Node]
+    N2[TRON Node]
+    N3[Polygon Node]
     end
 
-    subgraph Ingestion["Cloud Run — Multi-chain collectors"]
-    IC1[ETH Parser → raw unified tx schema]
-    IC2[TRON Parser → raw unified tx schema]
-    IC3[Polygon Parser → raw unified tx schema]
+    subgraph Ingestion["Collectors - Cloud Run"]
+    IC1[ETH Parser]
+    IC2[TRON Parser]
+    IC3[Polygon Parser]
     end
 
-    Users -->|trigger tx| Blockchain
-    Blockchain -->|blocks, receipts, traces| N1 & N2 & N3
+    Users --> Blockchain
+    Blockchain --> N1
+    Blockchain --> N2
+    Blockchain --> N3
 
     N1 --> IC1
     N2 --> IC2
@@ -48,77 +50,70 @@ flowchart LR
     ALERT((risk_alerts))
 
     %% ========= CORE PROCESSING =========
-
-    subgraph FirstPass["Local Risk Scoring (Cloud Run or Flink)"]
-    RTRA[Raw transaction risk analyzer<br/>(heuristics + ML)]
+    subgraph FirstPass["Local Risk Scoring"]
+    RTRA[Raw Transaction Risk Analyzer]
     end
 
     RT --> RTRA --> RTX
 
-    subgraph Aggregation["Address Risk Aggregation (Flink/Dataflow)"]
-    ARA[address_risk_aggregator<br/>(rolling windows)]
+    subgraph Aggregation["Address Aggregation"]
+    ARA[Address Risk Aggregator]
     end
 
     RTX --> ARA --> RA
 
     %% ========= STATE & HISTORY =========
-
     subgraph State["Persistent Storage"]
-    BT[(Bigtable<br/>address state store)]
-    BQ[(BigQuery<br/>transaction risk history)]
+    BT[(Bigtable - address state)]
+    BQ[(BigQuery - tx history)]
     end
 
-    RA -->|write updated state| BT
-    RTX -->|append| BQ
+    RA --> BT
+    RTX --> BQ
 
-    %% ========= STATE UPDATER (missing before) =========
-
-    subgraph Stabilization["Risk State Updater (MISSING BEFORE)"]
-    RSU[risk_state_updater<br/>decay, cooldown, dedup, convergence]
+    %% ========= STATE UPDATER =========
+    subgraph Stabilization["Risk State Updater"]
+    RSU[Apply decay, cooldown, dedup, convergence]
     end
 
     RA --> RSU --> BT
 
     %% ========= HISTORY LOOKUP =========
-
-    subgraph HistoryBuilder["History risk tx producer"]
-    HRP[Fetch tx history for flagged addresses<br/>(only if needed)]    
+    subgraph HistoryBuilder["History Fetcher"]
+    HRP[Fetch tx history for flagged addresses]
     end
 
-    RA -->|if risk HIGH or risk changed significantly| HRP --> HTX
+    RA --> HRP --> HTX
     HTX --> BT
 
-    %% ========= GEMINI RECURSIVE ANALYSIS =========
-
-    subgraph GeminiBlock["Gemini Behavioral Reasoning Layer"]
-    GEM[Gemini<br/>risk reasoning + narrative]
-    Dedup[Cooldown & dedup guard<br/>avoid infinite recursion]
+    %% ========= GEMINI ANALYSIS =========
+    subgraph GeminiBlock["Gemini Reasoning"]
+    GEM[Gemini - Behavior Analysis]
+    GUARD[Cooldown Guard - prevent loops]
     end
 
-    %% explicit flow:
-    BT -->|read state & recent history| GEM -->|behavior risk result| Dedup --> RSU
+    BT --> GEM --> GUARD --> RSU
 
     %% ========= API EXPOSURE =========
-
     subgraph APILayer["Risk API Exposure"]
     APIGW[API Gateway]
-    RAPI[Risk API (Cloud Run)]
+    RAPI[Risk API - Cloud Run]
     end
 
-    Users -->|query risk| APIGW --> RAPI --> BT
-    D -->|explorer queries| APIGW
-    C -->|CEX risk lookups| APIGW
-    B -->|dApp risk checks| APIGW
+    Users --> APIGW --> RAPI --> BT
+    D --> APIGW
+    C --> APIGW
+    B --> APIGW
 
     %% ========= OUTPUT CONSUMERS =========
-
-    subgraph Outputs["Consumers & Intelligence Outputs"]
-    UI[Risk Dashboard (Looker Studio)]
-    SOC[SIEM / Alerts / Compliance ops]
-    ENDPOINTS[Wallets, Bridges, Custodians]
+    subgraph Outputs["Consumers"]
+    UI[Risk Dashboard]
+    SOC[Alerts for compliance or SIEM]
+    PARTNERS[Wallets Bridges Custodians]
     end
 
-    RA -->|Medium/High| ALERT --> SOC
+    RA --> ALERT --> SOC
     RA --> UI
-    APIGW --> ENDPOINTS
+    APIGW --> PARTNERS
+
 ```
