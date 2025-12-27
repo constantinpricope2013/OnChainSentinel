@@ -1,5 +1,11 @@
 
-![OnChainSentinel](./assets/logo.png)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.png">
+  <img alt="OnChainSentinel Logo" src="assets/logo-light.png" width="300">
+</picture>
+
 
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
@@ -180,10 +186,16 @@ DROP MODEL model_tx_analyzer
 ## 🧪 TEST ROUND
 
 ### Run producer once
+```
 python kafka/producer.py
+```
+
 
 ### Check enriched risk stream
+```
 confluent kafka topic consume onchainsentinel.risk.scores --from-beginning
+```
+
 
 Expected:
-{"address":"0xTEST"...,"response_text":"SUSPICIOUS: abnormal burstiness"}
+{"address":"0xTEST"...,"response_text":"HIGH: abnormal values"}

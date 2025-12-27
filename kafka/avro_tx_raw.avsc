@@ -7,7 +7,7 @@
     {"name": "txId", "type": "string"},
     {"name": "address", "type": "string"},
     {"name": "to_address", "type": "string"},
-    {"name": "value", "type": "string"},
-    {"name": "ts", "type": "long"}
+    {"name": "amount", "type": "string"},
+    {"name": "ts", "type": "string"}
   ]
 }
