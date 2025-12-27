@@ -46,7 +46,7 @@ confluent kafka cluster use $KAFKA_CLUSTER_ID
 kafka/create_topics.sh
 ```
 
-### Create topics
+### Create schemas
 ```
 kafka/create_schemas.sh
 ```
@@ -83,7 +83,7 @@ Note: Unfortunatly we could not use managed models (available only in AWS specif
 
 Generate an API Key from https://aistudio.google.com/app/apikey.
 
-The endpoint is https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent.
+The endpoint is https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent.
 
 Gemini models are also supported through the Gemini AI provider, which you may prefer due to integrated Google Cloud billing.
 
@@ -93,7 +93,7 @@ Gemini models are also supported through the Gemini AI provider, which you may p
 CREATE CONNECTION googleai_connection
 WITH (
   'type' = 'googleai',
-  'endpoint' = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+  'endpoint' = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent',
   'api-key' = '<your-gcp-api-key>'
 );
 ```
@@ -110,11 +110,25 @@ DROP CONNECTION googleai_connection;
 2. CREATE MODEL
 ```
 CREATE MODEL model_tx_analyzer
-INPUT (`text` VARCHAR(2147483647))
-OUTPUT (`output` VARCHAR(2147483647))
+INPUT (
+    chain STRING,
+    txId STRING,
+    address STRING,
+    toAddress STRING,
+    value DOUBLE,
+    tx_count BIGINT,
+    recent_risk_events STRING   -- serialized list from aggregator
+)
+OUTPUT (
+    risk_level STRING,
+    reason STRING
+)
 WITH (
   'googleai.connection' = 'googleai_connection',
-  'googleai.system_prompt' = 'You are a blockchain AI risk classifier.\\nClassify the following transaction as HIGH, MEDIUM, or LOW risk',
+  'googleai.system_prompt' = 'You are a blockchain fraud risk classifier. \
+Evaluate raw transaction data using faud behavioral or fraud patterns indicators. \
+Classify overall risk as LOW, MEDIUM, or HIGH. ALWAYS return two fields: \
+risk_level and reason (one concise sentence).',
   'provider' = 'googleai',
   'task' = 'text_generation'
 );
@@ -134,11 +148,10 @@ DROP MODEL model_tx_analyzer
 
 ### Apply SQL in this exact order
 
-:> flink/01_behavior_raw.sql
-:> flink/02_behavior_prompt.sql
-:> flink/03_behavior_risk_scores.sql
-:> flink/04_model_create_managed_gemma.sql
-:> flink/05_ai_enrichment.sql
+---
+1. flink/create_connection.sql
+2. flink/create_model.sql
+3. 
 
 
 ---
