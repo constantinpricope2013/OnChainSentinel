@@ -114,7 +114,7 @@ Note: Unfortunatly we could not use managed models (available only in AWS specif
 
 Generate an API Key from https://aistudio.google.com/app/apikey.
 
-The endpoint is https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent.
+The endpoint is https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview.
 
 Gemini models are also supported through the Gemini AI provider, which you may prefer due to integrated Google Cloud billing.
 
@@ -124,7 +124,7 @@ Gemini models are also supported through the Gemini AI provider, which you may p
 CREATE CONNECTION googleai_connection
 WITH (
   'type' = 'googleai',
-  'endpoint' = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent',
+  'endpoint' = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
   'api-key' = '<your-gcp-api-key>'
 );
 ```
@@ -142,27 +142,21 @@ DROP CONNECTION googleai_connection;
 ```
 CREATE MODEL model_tx_analyzer
 INPUT (
-    chain STRING,
-    txId STRING,
-    address STRING,
-    toAddress STRING,
-    value DOUBLE,
-    tx_count BIGINT,
-    ts STRING
+    tx_payload STRING
 )
 OUTPUT (
-    risk_level STRING,
-    reason STRING
+    json_result STRING 
 )
 WITH (
   'googleai.connection' = 'googleai_connection',
   'googleai.system_prompt' = 'You are a blockchain fraud risk classifier. \
-Evaluate raw transaction data using faud behavioral or fraud patterns indicators. \
-Classify overall risk as LOW, MEDIUM, or HIGH. ALWAYS return two fields: \
-risk_level and reason (one concise sentence).',
+Evaluate raw transaction data using fraud behavioral or fraud patterns indicators. \
+Respond ONLY with a JSON object containing "risk_level" and "reason". \
+risk_level must be LOW, MEDIUM, or HIGH. reason must be a single short sentence.',
   'provider' = 'googleai',
   'task' = 'text_generation'
 );
+
 ```
 
 ```
@@ -171,7 +165,7 @@ SHOW MODELS;
 
 
 ```
-DROP MODEL model_tx_analyzer
+DROP MODEL model_tx_analyzer;
 ```
 
 
