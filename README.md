@@ -13,7 +13,6 @@ This repository contains a minimal Proof of Concept demonstrating:
 - Risk assesment through Gemini API remote model
 
 # Architecture
-![Architecture](./assets/arhitecture.png)
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/arhitecture-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/arhitecture-light.png">
