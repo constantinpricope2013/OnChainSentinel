@@ -1,23 +1,44 @@
-# OnChainSentinel
+
+![OnChainSentinel](./assets/logo.png)
+
+## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
 - Real-time behavior ingestion (Kafka)
-- Risk output to a downstream Kafka topic
-- Optional sink to BigQuery on Google Cloud
+- Risk assesment through Gemini API remote model
 
-Architecture: Kafka → Flink (Gemini/Vertex AI) → Kafka → (optional BigQuery)
+# Architecture
+![Architecture](./assets/Arhitecture.png)
 
 ---
 
-## SETUP
+# 🛠️ SETUP
 
-### Login to Confluent & select env/cluster
+For this project we use confluent and google cloud (gcloud) cli.
+
+As components we use:
+1. Confluent Cloud 
+ - Kafka 
+ - Flink AI
+2. Google Cloud Platform 
+  - Gemini API exposure
+  - Cloud Run
+  - BigTables
+
+
+Extra details:
+ We created schemas, logo using draw.io (Check ./assets/OnChainSentinel.drawio)
+
+
+
+
+## 🔓 Login to Confluent & select env/cluster
 
 ```
 confluent login
 ```
 
 
-### Environment
+### 🏠︎ Environment
 ```
 confluent environment create onchainsentinel
 confluent environment list # Optional to list environments
@@ -28,7 +49,7 @@ confluent environment delete $ENV_ID
 
 
 
-### Cluster
+### ☸️ Cluster
 
 ```
 confluent kafka cluster create onchainsentinel-kafka \
@@ -41,17 +62,17 @@ confluent kafka cluster use $KAFKA_CLUSTER_ID
 ```
  
 
-### Create topics
+### 📚 Create topics
 ```
 kafka/create_topics.sh
 ```
 
-### Create schemas
+### 🗒️ Create schemas
 ```
 kafka/create_schemas.sh
 ```
 
-### Create Flink compute pool 
+### 🖥️ Create Flink compute pool 
 ```
 confluent flink compute-pool create onchainsentinel-flink --cloud gcp --region us-east1 --max-cfu 5
 ```
@@ -67,7 +88,7 @@ confluent flink compute-pool delete $FLINK_POOL_ID
 
 
 
-## Start Flink SQL shell
+## </> Start Flink SQL shell
 
 ```
 confluent flink shell --compute-pool $FLINK_POOL_ID --database $KAFKA_CLUSTER_ID
@@ -76,10 +97,10 @@ confluent flink shell --compute-pool $FLINK_POOL_ID --database $KAFKA_CLUSTER_ID
 Note: Ctrl + Q to exit shell
 
 
-# Model creation
+# ֎ Model creation
 Note: Unfortunatly we could not use managed models (available only in AWS specific region) and opt for a remote AI model
 
-## Remote AI model Gemini AI
+## 🔌 Remote AI model Gemini AI
 
 Generate an API Key from https://aistudio.google.com/app/apikey.
 
@@ -117,7 +138,7 @@ INPUT (
     toAddress STRING,
     value DOUBLE,
     tx_count BIGINT,
-    recent_risk_events STRING   -- serialized list from aggregator
+    ts STRING
 )
 OUTPUT (
     risk_level STRING,
@@ -156,7 +177,7 @@ DROP MODEL model_tx_analyzer
 
 ---
 
-## TEST ROUND
+## 🧪 TEST ROUND
 
 ### Run producer once
 python kafka/producer.py
