@@ -178,6 +178,148 @@ DROP MODEL model_tx_analyzer;
 2. flink/create_model.sql
 3. 
 
+---
+
+
+## 🎞️ Create Streaming using Flink AI
+
+
+Step 1. Merge the result from AI with kafka topic details
+```
+  SELECT 
+    *
+FROM onchainsentinel_tx,
+LATERAL TABLE(ML_PREDICT('model_tx_analyzer', CONCAT(
+      '{ "chain":"', chain,
+      '", "txId":"', txId,
+      '", "address":"', address,
+      '", "toAddress":"', to_address,
+      '", "amount":"', amount,
+      '", "ts":"', ts,
+      '" }'
+    )));
+```
+
+
+Step 2. Make all the details available
+```
+SELECT
+    txId,
+    chain,
+    address,
+    to_address,
+    amount,
+    ts,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.risk_level'
+    ) AS risk,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.reason'
+    ) AS reason
+FROM onchainsentinel_tx,
+LATERAL TABLE(ML_PREDICT(
+    'model_tx_analyzer',
+    CONCAT(
+      '{ "chain":"', chain,
+      '", "txId":"', txId,
+      '", "address":"', address,
+      '", "toAddress":"', to_address,
+      '", "amount":"', amount,
+      '", "ts":"', ts,
+      '" }'
+    )
+  )
+);
+```
+
+Step 3. Create a view ❌
+```
+CREATE VIEW onchainsentinel_tx_risk_stream AS
+SELECT
+    txId,
+    chain,
+    address,
+    to_address,
+    amount,
+    ts,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.risk_level'
+    ) AS risk,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.reason'
+    ) AS reason
+FROM onchainsentinel_tx,
+LATERAL TABLE(ML_PREDICT(
+    'model_tx_analyzer',
+    CONCAT(
+      '{ "chain":"', chain,
+      '", "txId":"', txId,
+      '", "address":"', address,
+      '", "toAddress":"', to_address,
+      '", "amount":"', amount,
+      '", "ts":"', ts,
+      '" }'
+    )
+  )
+) AS T(prediction);
+```
+
+Step 4. Continous stream 
+
+```
+INSERT INTO onchainsentinel_risk_tx
+SELECT
+    CAST(txId AS BYTES) AS key,
+    txId as tx_id,
+    chain,
+    'model_tx_analyzer' AS model_name,
+    CONCAT(
+      '{ "chain":"', chain,
+      '", "txId":"', txId,
+      '", "address":"', address,
+      '", "toAddress":"', to_address,
+      '", "amount":"', amount,
+      '", "ts":"', ts,
+      '" }'
+    ) AS origin_tx,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.risk_level'
+    ) AS risk,
+    JSON_VALUE(
+      REPLACE(REPLACE(json_result, '```json', ''), '```', ''),
+      '$.reason'
+    ) AS reason
+FROM onchainsentinel_tx,
+LATERAL TABLE(ML_PREDICT(
+    'model_tx_analyzer',
+    CONCAT(
+      '{ "chain":"', chain,
+      '", "txId":"', txId,
+      '", "address":"', address,
+      '", "toAddress":"', to_address,
+      '", "amount":"', amount,
+      '", "ts":"', ts,
+      '" }'
+    )
+  )
+);
+```
+
+5. Check if the job is running
+```
+confluent flink statement list --compute-pool <pool-id> -o json | jq '.[] | select(.status == "RUNNING")'
+```
+
+
+
+
+```
+
 
 ---
 

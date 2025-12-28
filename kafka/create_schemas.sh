@@ -21,3 +21,12 @@ confluent schema-registry schema create  \
  --subject onchainsentinel_risk_tx-value \
  --type AVRO \
  --schema kafka/avro_risk_tx.avsc
+
+
+
+confluent schema-registry schema create  \
+ --subject onchainsentinel_history_tx-value \
+ --type AVRO \
+ --schema kafka/avro_history_tx.avsc
+
+

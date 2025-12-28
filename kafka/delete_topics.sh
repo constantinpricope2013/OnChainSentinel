@@ -3,4 +3,6 @@
 confluent kafka topic delete onchainsentinel_tx
 confluent kafka topic delete onchainsentinel_risk_address
 confluent kafka topic delete onchainsentinel_risk_tx
+confluent kafka topic delete onchainsentinel_history_tx
+
 
