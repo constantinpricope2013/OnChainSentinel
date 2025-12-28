@@ -26,3 +26,4 @@ export FLINK_POOL_ID=$(
 )
 confluent flink compute-pool use $FLINK_POOL_ID
 echo "✅ Step 2. Flink compute pool created"
+

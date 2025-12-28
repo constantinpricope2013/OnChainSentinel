@@ -4,6 +4,7 @@
   "namespace": "onchainsentinel",
   "fields": [
     {"name": "tx_id", "type": "string"},
+    {"name": "address", "type": "string"},
     {"name": "chain", "type": "string"},
     {"name": "model_name", "type": "string"},
     {"name": "origin_tx", "type": "string"},
