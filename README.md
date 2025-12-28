@@ -16,7 +16,7 @@ This repository contains a minimal Proof of Concept demonstrating:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/arhitecture-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/arhitecture-light.png">
-  <img alt="OnChainSentinel Logo" src="assets/arhitecture-light.png" width="300">
+  <img alt="OnChainSentinel Logo" src="assets/arhitecture-light.png" width="800">
 </picture>
 
 ---
