@@ -7,19 +7,19 @@
 </picture>
 
 ## Table of Contents
-📝 [Description](#-description)
-✏️ [Architecture](#%EF%B8%8F-architecture)
-🧩 [Proof of concept](#-proof-of-concept)
-🛠️ [Setup](#%EF%B8%8F-setup)
-🚀 [Deploy](#-deploy)
+1. 📝 [Description](#-description)
+2. ✏️ [Architecture](#%EF%B8%8F-architecture)
+3. 🧩 [Proof of concept](#-proof-of-concept)
+4. 🛠️ [Setup](#%EF%B8%8F-setup)
+5. 🚀 [Deploy](#-deploy)
   - [Create resources in Confluent Cloud](#create-resources-in-confluent-cloud)
   - [Create BigQuery in GCP](#create-bigquery-in-gcp)
   - [Deploy CloudRun risk_api ](#deploy-cloudrun-risk_api)
-💣 [Destroy](#-destroy)
+6. 💣 [Destroy](#-destroy)
   - [Destroy Resource Confluent Cloud](#destroy-resource-confluent-cloud)
   - [Destroy Resource GCP](#destroy-resource-gcp)
     - ⛃ [Destroy BigQuery](#-destroy-bigquery)
-🧪 [End to end test](#-end-to-end-test)
+7. 🧪 [End to end test](#-end-to-end-test)
 
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
@@ -30,7 +30,7 @@ This repository contains a minimal Proof of Concept demonstrating:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/arhitecture-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/arhitecture-light.png">
-  <img alt="OnChainSentinel Logo" src="assets/arhitecture-light.png" width="800">
+  <img alt="OnChainSentinel Arhitecture" src="assets/arhitecture-light.png" width="800">
 </picture>
 
 ---
@@ -39,7 +39,7 @@ This repository contains a minimal Proof of Concept demonstrating:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/poc-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/poc-light.png">
-  <img alt="OnChainSentinel Logo" src="assets/poc-light.png" width="800">
+  <img alt="OnChainSentinel Proof Of Concept" src="assets/poc-light.png" width="800">
 </picture>
 
 ---
