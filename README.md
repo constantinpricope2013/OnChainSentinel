@@ -10,9 +10,12 @@
 3. 🧩 [Proof of concept](#-proof-of-concept)
 4. 🛠️ [Setup](#%EF%B8%8F-setup)
 5. 🚀 [Deploy](#-deploy)
-   - [Create resources in Confluent Cloud](#create-resources-in-confluent-cloud)
-   - [Create BigQuery in GCP](#create-bigquery-in-gcp)
-    - [Deploy CloudRun risk_api ](#deploy-cloudrun-risk_api)
+   - [a. Create resources in Confluent Cloud](#create-resources-in-confluent-cloud)
+   - [b. Create Gemini Key](#create-key-gemini)
+   - [c. Create Streamning in Flink](#create-streaming-in-flink)
+   - [d. Create BigQuery in GCP](#create-bigquery-in-gcp)
+   - [e. Create BigQuery sink in Conflunt Web](#create-bigquery-sink-in-conflunt-web)
+   - [f. Deploy CloudRun risk_api ](#deploy-cloudrun-risk_api)
 6. 💣 [Destroy](#-destroy)
    - [Destroy Resource Confluent Cloud](#destroy-resource-confluent-cloud)
    - [Destroy Resource GCP](#destroy-resource-gcp)
@@ -87,13 +90,15 @@ Access the website https://aistudio.google.com/app/api-keys and create a new key
 
 
 ### Create streaming in Flink
-5. Create in Flink Shell the remote model along with streaming pipeline, check details in [Flink read me file](flink/README.md) 
+Create in Flink Shell the remote model along with streaming pipeline, check details in [Flink read me file](flink/README.md) 
 
 All we need is up, we just need to create also a sink with BiqQuery but first we will need to have already deploy BigQuery and the credential available to us.
 
 ### Create BigQuery in GCP
 Please check the [BigQuery read me file](sink-bigquery/README.md)
 
+### Create BigQuery sink in Conflunt Web
+Please install BigQuery sink v2 using previously generated credential using the web interface
 
 ### Deploy CloudRun risk_api 
 Please check the [CloudRun risk-api read me file](api/README.md)
