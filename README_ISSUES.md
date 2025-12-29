@@ -1,5 +1,5 @@
 
-
+# ⚠️ Issues we encounter during development 
 
 1. Intrepretation of data from AI when we want two fields
 - we needed the risk assesment (LOW, MEDIUM. HIGH) but also a short sentence to explain it
@@ -48,4 +48,5 @@ Error details: Internal error occurred. Statement:
 
 Most likely you cannot create a view with an ML_PREDICT (Model integration) - you must check this
 
-4. 
+
+

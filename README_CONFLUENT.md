@@ -17,7 +17,6 @@ confluent environment delete $ENV_ID
 ```
 
 
-
 ### ☸️ Cluster
 
 ```

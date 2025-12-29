@@ -59,14 +59,44 @@ Extra details:
 ## 🚀 Deploy
 
 Here will make in steps as we need to deploy in both Google Cloud and Confluent Cloud
+
 ### Create resources in Confluent Cloud
 
+For simplicity we created scripts:
+1. Deploy resources on Clonfluent Cloud using [deploy script](deploy.sh)
+```sh
+deploy.sh 
+```
+2. Wait for Kafka to be up
+
+
+3. Create topics using [create topic script](kafka/create_topics.sh)
+```sh
+kafka/create_topics.sh
+```
+
+4. Create schemas using [create schemas script](kafka/create_schemas.sh)
+```sh
+kafka/create_schemas.sh
+```
+
+For more info regarding the above and all CONFLUNET operation check the [CONFLUENT read me file](README_CONFLUENT.md)
+
+### Create key Gemini
+Access the website https://aistudio.google.com/app/api-keys and create a new key
+
+
+### Create streaming in Flink
+5. Create in Flink Shell the remote model along with streaming pipeline, check details in [Flink read me file](flink/README.md) 
+
+All we need is up, we just need to create also a sink with BiqQuery but first we will need to have already deploy BigQuery and the credential available to us.
 
 ### Create BigQuery in GCP
+Please check the [BigQuery read me file](sink-bigquery/README.md)
 
 
 ### Deploy CloudRun risk_api 
-
+Please check the [CloudRun risk-api read me file](api/README.md)
 
 
 ## 💣 Destroy
@@ -82,12 +112,31 @@ destroy.sh
 ### Destroy Resource GCP
 
 #### ⛃ Destroy BigQuery 
+```
+
+```
+
+#### 🔑 Destroy API Key from AI Studio
+Access the website https://aistudio.google.com/app/api-keys and delete key from your account
+
 
 ---
 
 ## 🧪 END TO END TEST
 
+The flow is:
+1. producer script inserts 3 messages in onchainsentinel_tx topic
+2. flink streaming reads from topic, pings the gemini for risk assesment and saves the result in onchainsentinel_risk_tx
+3. BigQuery Sink v2 reads from onchainsentinel_risk_tx topic and enters the data in BigQuery
+4. The cloud run risk-api each time is called reads from the BigQuery and returns the result
+5. The dashboard calls the API 
+
+
 ### Run producer once
+
+We have a script that inserts into onchainsentinel_tx topic 3 messages which are 3 transactions exampl from eth mainnet
+
+
 ```
 producer.sh
 ```

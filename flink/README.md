@@ -2,6 +2,16 @@
 # ֎ Model creation
 Note: Unfortunatly we could not use managed models (available only in AWS specific region) and opt for a remote AI model
 
+Apply SQL in this exact order or check  details below for more information
+
+Open an shell and enter the 3 commands
+---
+1. 01_create_connection.sql
+2. 02_create_model.sql
+3. 03_create_straming_risk_tx.sql
+
+---
+
 ## 🔌 Remote AI model Gemini AI
 
 Generate an API Key from https://aistudio.google.com/app/apikey.
@@ -59,14 +69,6 @@ SHOW MODELS;
 ```
 DROP MODEL model_tx_analyzer;
 ```
-
-### Apply SQL in this exact order
-
----
-1. flink/create_connection.sql
-2. flink/create_model.sql
-3. 
-
 ---
 
 
