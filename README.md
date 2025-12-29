@@ -27,6 +27,14 @@ This repository contains a minimal Proof of Concept demonstrating:
 - Real-time behavior ingestion (Kafka)
 - Risk assesment through Gemini API remote model
 
+The flow is:
+1. producer script inserts 3 messages in onchainsentinel_tx topic
+2. flink streaming reads from topic, pings the gemini for risk assesment and saves the result in onchainsentinel_risk_tx
+3. BigQuery Sink v2 reads from onchainsentinel_risk_tx topic and enters the data in BigQuery
+4. The cloud run risk-api each time is called reads from the BigQuery and returns the result
+5. The dashboard calls the API with 1 out of the 3 transation or 3 addresses
+
+
 ## ✏️ Architecture
 ![arhitecture-light](assets/arhitecture-light.png#gh-light-mode-only)
 ![arhitecture-dark](assets/arhitecture-dark.png#gh-dark-mode-only)
@@ -128,14 +136,6 @@ Access the website https://aistudio.google.com/app/api-keys and delete key from 
 ---
 
 ## 🧪 END TO END TEST
-
-The flow is:
-1. producer script inserts 3 messages in onchainsentinel_tx topic
-2. flink streaming reads from topic, pings the gemini for risk assesment and saves the result in onchainsentinel_risk_tx
-3. BigQuery Sink v2 reads from onchainsentinel_risk_tx topic and enters the data in BigQuery
-4. The cloud run risk-api each time is called reads from the BigQuery and returns the result
-5. The dashboard calls the API 
-
 
 ### Run producer once
 
