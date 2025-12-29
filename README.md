@@ -1,7 +1,7 @@
 
 
-![logo-light](assets/logo-light.png#gh-light-mode-only)
-![logo-dark](assets/logo-dark.png#gh-dark-mode-only)
+![logo-light](assets/logo-light-smaller.png#gh-light-mode-only)
+![logo-dark](assets/logo-dark-smaller.png#gh-dark-mode-only)
 
 
 ## Table of Contents
