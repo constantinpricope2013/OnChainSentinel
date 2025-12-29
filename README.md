@@ -7,13 +7,19 @@
 </picture>
 
 ## Table of Contents
-- [📝 Description](#📝-description)
-- [✏️ Architecture](#✏️-architecture)
-- [🧩 Proof of concept](#🧩-proof-of-concept)
-- [🛠️ Setup](#🛠️-setup)
-- [🚀 Deploy](#🚀-deploy)
-- [💣 Destroy](#💣-destroy)
-- [🧪 End to end test](#🧪-end-to-end-test)
+📝 [Description](#-description)
+✏️ [Architecture](#%EF%B8%8F-architecture)
+🧩 [Proof of concept](#-proof-of-concept)
+🛠️ [Setup](#%EF%B8%8F-setup)
+🚀 [Deploy](#-deploy)
+  - [Create resources in Confluent Cloud](#create-resources-in-confluent-cloud)
+  - [Create BigQuery in GCP](#create-bigquery-in-gcp)
+  - [Deploy CloudRun risk_api ](#deploy-cloudrun-risk_api)
+💣 [Destroy](#-destroy)
+  - [Destroy Resource Confluent Cloud](#destroy-resource-confluent-cloud)
+  - [Destroy Resource GCP](#destroy-resource-gcp)
+    - ⛃ [Destroy BigQuery](#-destroy-bigquery)
+🧪 [End to end test](#-end-to-end-test)
 
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
@@ -80,6 +86,8 @@ destroy.sh
 ```
 
 ### Destroy Resource GCP
+
+#### ⛃ Destroy BigQuery 
 
 ---
 
