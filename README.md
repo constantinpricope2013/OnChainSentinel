@@ -6,7 +6,7 @@
   <img alt="OnChainSentinel Logo" src="assets/logo-light.png" width="300">
 </picture>
 
-## Table of Contents
+<!-- ## Table of Contents
 1. 📝 [Description](#-description)
 2. ✏️ [Architecture](#%EF%B8%8F-architecture)
 3. 🧩 [Proof of concept](#-proof-of-concept)
@@ -24,7 +24,7 @@
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
 - Real-time behavior ingestion (Kafka)
-- Risk assesment through Gemini API remote model
+- Risk assesment through Gemini API remote model -->
 
 ## ✏️ Architecture
 <picture>
