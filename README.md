@@ -7,13 +7,13 @@
 </picture>
 
 ## Table of Contents
-- [📝 Description](#📝-Description)
-- [✏️ Architecture](#✏️-Architecture)
-- [🧩 Proof of concept](#🧩-Proof-of-concept)
-- [🛠️ SETUP](#🛠️-SETUP)
-- [🚀 Deploy](#🚀-Deploy)
-- [💣 Destroy](#💣-Destroy)
-- [🧪 TEST END TO END](#🧪-TEST-END-TO-END)
+- [📝 Description](#📝-description)
+- [✏️ Architecture](#✏️-architecture)
+- [🧩 Proof of concept](#🧩-proof-of-concept)
+- [🛠️ Setup](#🛠️-setup)
+- [🚀 Deploy](#🚀-deploy)
+- [💣 Destroy](#💣-destroy)
+- [🧪 End to end test](#🧪-end-to-end-test)
 
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
@@ -73,19 +73,17 @@ Here will make in steps as we need to deploy in both Google Cloud and Confluent 
 
 We have two components that we must destroy resources
 
-### 💣 Destroy Resource Confluent Cloud
+### Destroy Resource Confluent Cloud
 We can simply call that just deletes the environment and all the resources will be deleted.
 ```
 destroy.sh
 ```
 
-### 💣 Destroy Resource GCP
-
-
+### Destroy Resource GCP
 
 ---
 
-## 🧪 TEST END TO END
+## 🧪 END TO END TEST
 
 ### Run producer once
 ```
