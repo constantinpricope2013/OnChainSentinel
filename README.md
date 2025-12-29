@@ -1,12 +1,10 @@
 
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.png">
-  <img alt="OnChainSentinel Logo" src="assets/logo-light.png" width="300">
-</picture>
+![logo-light](assets/logo-light.png#gh-light-mode-only)
+![logo-dark](assets/logo-dark.png#gh-dark-mode-only)
 
-<!-- ## Table of Contents
+
+## Table of Contents
 1. 📝 [Description](#-description)
 2. ✏️ [Architecture](#%EF%B8%8F-architecture)
 3. 🧩 [Proof of concept](#-proof-of-concept)
@@ -24,23 +22,19 @@
 ## 📝 Description
 This repository contains a minimal Proof of Concept demonstrating:
 - Real-time behavior ingestion (Kafka)
-- Risk assesment through Gemini API remote model -->
+- Risk assesment through Gemini API remote model
 
 ## ✏️ Architecture
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/arhitecture-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/arhitecture-light.png">
-  <img alt="OnChainSentinel Arhitecture" src="assets/arhitecture-light.png" width="800">
-</picture>
+![arhitecture-light](assets/arhitecture-light.png#gh-light-mode-only)
+![arhitecture-dark](assets/arhitecture-dark.png#gh-dark-mode-only)
+
 
 ---
 
-<!-- ## 🧩 Proof of concept
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/poc-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/poc-light.png">
-  <img alt="OnChainSentinel Proof Of Concept" src="assets/poc-light.png" width="800">
-</picture> -->
+## 🧩 Proof of concept
+![poc-light](assets/poc-light.png#gh-light-mode-only)
+![poc-dark](assets/poc-dark.png#gh-dark-mode-only)
+
 
 ---
 
