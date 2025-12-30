@@ -107,6 +107,7 @@ Please check the [BigQuery read me file](sink-bigquery/README.md)
 
 ### Create BigQuery sink in Conflunt Web
 Please install BigQuery sink v2 using previously generated credential using the web interface
+![Create BigQuery Sink Connector](assets/bigquery-sink.gif)
 
 ### Deploy CloudRun risk_api 
 Please check the [CloudRun risk-api read me file](api/README.md)
@@ -125,9 +126,11 @@ destroy.sh
 ### Destroy Resource GCP
 
 #### ⛃ Destroy BigQuery 
-```
+Please check the [BigQuery read me file](sink-bigquery/README.md)
 
-```
+#### ⛃ Destroy Cloud run riks api
+Please check the [CloudRun risk-api read me file](api/README.md)
+
 
 #### 🔑 Destroy API Key from AI Studio
 Access the website https://aistudio.google.com/app/api-keys and delete key from your account
@@ -145,3 +148,19 @@ We have a script that inserts into onchainsentinel_tx topic 3 messages which are
 ```
 producer.sh
 ```
+
+Let's open onchainsentinel.xyz and input the  API we have from risk-api cloud run,
+
+Enter an tx from the list our producer has
+0x9b6a68cf6c3cc326915b2231dcdb0e7cd2218ffedefa4851f15d9b36d96e19f9
+0x17276519456ffabd9520b16aa68dd3784ef2bedba0fbdfb6f5712673c80d18c8
+0xcc009864fb75c127d3269d6adf950819eeb4db321193cf89a80574c1386f8fba
+
+Or an address:
+0x8e0b5395B813E75dA6a44c813cD41497A962D2bE
+0x31BE367443E18458A2784AD7B0bA9224B6c25d72
+0x0d043128146654C7683Fbf30ac98D7B2285DeD00
+
+Press enter and read the result.
+
+
