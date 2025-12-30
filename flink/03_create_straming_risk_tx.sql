@@ -2,8 +2,8 @@
 INSERT INTO onchainsentinel_risk_tx
 SELECT
     CAST(txId AS BYTES) AS key,
+    txId AS tx_id,
     address,
-    txId as tx_id,
     chain,
     'model_tx_analyzer' AS model_name,
     CONCAT(

@@ -18,5 +18,7 @@ gcloud run deploy tx-risk-api \
 
 
 ## ✗ Release resource
+```
 gcloud run services delete tx-risk-api
+```
 

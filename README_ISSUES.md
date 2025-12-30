@@ -49,4 +49,11 @@ Error details: Internal error occurred. Statement:
 Most likely you cannot create a view with an ML_PREDICT (Model integration) - you must check this
 
 
+4. Kafka topic created by BigQuerySink is not deleted when we delete the sink (might be normal behavior)
+
+
+5.
+
+
+
 

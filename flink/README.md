@@ -165,7 +165,8 @@ Step 4. Continous stream
 INSERT INTO onchainsentinel_risk_tx
 SELECT
     CAST(txId AS BYTES) AS key,
-    txId as tx_id,
+    txId AS tx_id,
+    address,
     chain,
     'model_tx_analyzer' AS model_name,
     CONCAT(
@@ -201,11 +202,18 @@ LATERAL TABLE(ML_PREDICT(
 );
 ```
 
-5. Check if the job is running
-```
-confluent flink statement list --compute-pool <pool-id> -o json | jq '.[] | select(.status == "RUNNING")'
+
+## Check if the job is running
 ```
 
+export FLINK_POOL_ID=$(
+  confluent flink compute-pool list -o json \
+    | jq -r '.[] | select(.name=="onchainsentinel-flink") | .id'
+)
+confluent flink statement list --compute-pool $FLINK_POOL_ID -o json | jq '.[] | select(.status == "RUNNING")'
+```
+
+## Delete job
 
 
 
